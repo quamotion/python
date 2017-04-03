@@ -22,6 +22,7 @@ Install it using:
 
 ```
 pip install selenium
+pip install quamotion
 ```
 
 We'll assume you've already downloaded and configured the Quamotion WebDriver.
@@ -34,15 +35,8 @@ To achieve this, create an device automation session. Make sure to replace `7215
 with the UDID of your iOS device!
 
 ```python
-from selenium import webdriver
-driver = webdriver.Remote(
-	command_executor='http://localhost:17894/wd/hub',
-	desired_capabilities =
-	{
-		'waitForReady': True,
-		'applicationType': 'Device',
-		'deviceId': '72157b76f677f22c98864d62307fdff9d56fa62a'
-	})
+import quamotion
+driver = quamotion.device('72157b76f677f22c98864d62307fdff9d56fa62a')
 ```
 
 Once this step has completed (it may take a minute or two if this is the first time you're automating on this device),
@@ -64,8 +58,7 @@ driver.implicitly_wait(60000)
 Before we start automating the device, let's make sure we're in a known state and navigate to the start screen:
 
 ```python
-driver.command_executor._commands["homescreen"] = ('POST', '/session/$sessionId/wda/homescreen')
-driver.execute('homescreen', {})
+driver.home_screen()
 ```
 
 Next, let's launch Safari:
