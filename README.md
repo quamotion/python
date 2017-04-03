@@ -119,3 +119,9 @@ When Skype launches, you may get some additional alerts. You can accept them one
 ```python
 driver.switch_to_alert().accept()
 ```
+
+Finally, when you're done:
+
+```python
+driver.quit()
+```
