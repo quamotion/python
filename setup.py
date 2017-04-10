@@ -8,4 +8,8 @@ setup(name='quamotion',
       author_email='info@quamotion.mobi',
       license='Apache',
       packages=['quamotion'],
+      install_requires=[
+          'selenium',
+          'requests'
+      ],
       zip_safe=False)
