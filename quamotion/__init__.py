@@ -1,4 +1,13 @@
+import requests
 from selenium import webdriver
+
+def ensure_quamotion_running():
+	# Get the status page, to make sure the Quamotion WebDriver is up and running. This can come in handy
+	# if you have just (re)started the Quamotion service.
+	try:
+		r = requests.get('http://localhost:17894/wd/hub/status', timeout=5)
+	except Exception as e:
+		raise Exception('Failed to connect to the Quamotion WebDriver. Please make sure the WebDriver service is running!')
 
 def add_quamotion_extensions(driver):
 	driver.command_executor._commands["homescreen"] = ('POST', '/session/$sessionId/wda/homescreen')
@@ -8,14 +17,18 @@ def add_quamotion_extensions(driver):
 	driver.command_executor._commands["uninstall_app"] = ('DELETE', '/quamotion/device/$deviceId/app/$appId?strict')
 	driver.command_executor._commands["kill_app"] = ('POST', '/quamotion/device/$deviceId/app/$appId/kill?strict')
 	
-def device(deviceId):
+def device(deviceId, reuse_existing_session = True):
+	ensure_quamotion_running()
+
 	driver = webdriver.Remote(
 		command_executor='http://localhost:17894/wd/hub',
 		desired_capabilities =
 		{
 			'waitForReady': True,
 			'applicationType': 'Device',
-			'deviceId': deviceId
+			'deviceId': deviceId,
+			'takesScreenshot': False,
+			'reuseExistingSession': reuse_existing_session
 		})
 	
 	driver.deviceId = deviceId
@@ -23,17 +36,22 @@ def device(deviceId):
 	add_quamotion_extensions(driver)
 	return driver
 
-def web(deviceId):
+def web(deviceId, reuse_existing_session = True):
+	ensure_quamotion_running()
+
 	driver = webdriver.Remote(
 		command_executor='http://localhost:17894/wd/hub',
 		desired_capabilities =
 		{
 			'waitForReady': True,
 			'applicationType': 'Web',
-			'deviceId': deviceId
+			'deviceId': deviceId,
+			'takesScreenshot': False,
+			'reuseExistingSession': reuse_existing_session
 		})
 	
 	driver.deviceId = deviceId
+	driver.w3c = True
 
 	add_quamotion_extensions(driver)
 	return driver
