@@ -17,6 +17,7 @@ def add_quamotion_extensions(driver):
 	driver.command_executor._commands["uninstall_app"] = ('DELETE', '/quamotion/device/$deviceId/app/$appId?strict')
 	driver.command_executor._commands["kill_app"] = ('POST', '/quamotion/device/$deviceId/app/$appId/kill?strict')
 	driver.command_executor._commands["set_location"] = ('POST', '/session/$sessionId/location')
+	driver.command_executor._commands["get_appId"] = ('GET', '/session/$sessionId/quamotion/appId')
 
 def device(deviceId, reuse_existing_session = True):
 	ensure_quamotion_running()
@@ -58,7 +59,7 @@ def web(deviceId, reuse_existing_session = True):
 	return driver
 	
 def home_screen(self):
-	return self.execute('homescreen', {})
+	return self.execute('homescreen', {} )
 
 def get_installed_apps(self):
 	return self.execute('get_installed_apps', { 'deviceId': self.deviceId } )
@@ -76,7 +77,10 @@ def kill_app(self, app_id):
 	return self.execute('kill_app', { 'deviceId': self.deviceId, 'appId': app_id } )
 
 def set_location(self, latitude, longitude):
-    	return self.execute('set_location', { 'latitude': latitude, 'longitude': longitude } )
+	return self.execute('set_location', { 'latitude': latitude, 'longitude': longitude } )
+
+def get_appId(self):
+	return self.execute('get_appId', {} )['value']
 
 webdriver.Remote.home_screen = home_screen
 webdriver.Remote.get_installed_apps = get_installed_apps
@@ -85,3 +89,4 @@ webdriver.Remote.launch_app = launch_app
 webdriver.Remote.uninstall_app = uninstall_app
 webdriver.Remote.kill_app = kill_app
 webdriver.Remote.set_location = set_location
+webdriver.Remote.get_appId = get_appId
