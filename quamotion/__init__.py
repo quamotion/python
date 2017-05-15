@@ -1,5 +1,6 @@
 import requests
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 def ensure_quamotion_running():
 	# Get the status page, to make sure the Quamotion WebDriver is up and running. This can come in handy
@@ -18,6 +19,8 @@ def add_quamotion_extensions(driver):
 	driver.command_executor._commands["kill_app"] = ('POST', '/quamotion/device/$deviceId/app/$appId/kill?strict')
 	driver.command_executor._commands["set_location"] = ('POST', '/session/$sessionId/location')
 	driver.command_executor._commands["get_appId"] = ('GET', '/session/$sessionId/quamotion/appId')
+	driver.command_executor._commands["scroll_to"] = ('POST', '/session/$sessionId/element/$elementId/quamotion/scrollTo')
+	driver.command_executor._commands["scroll_to_visible"] = ('POST', '/session/$sessionId/element/$elementId/quamotion/scrollToVisible')
 
 def device(deviceId, reuse_existing_session = True):
 	ensure_quamotion_running()
@@ -82,6 +85,11 @@ def set_location(self, latitude, longitude):
 def get_appId(self):
 	return self.execute('get_appId', {} )['value']
 
+def scroll_to(self, container_id, xpath):
+	return self.execute('scroll_to', { 'elementId': container_id, 'value': xpath, 'using': By.XPATH  } )
+def scroll_to_visible(self, element_id):
+	return self.execute('scroll_to_visible', {'elementId': element_id} )
+
 webdriver.Remote.home_screen = home_screen
 webdriver.Remote.get_installed_apps = get_installed_apps
 webdriver.Remote.get_running_processes = get_running_processes
@@ -90,3 +98,5 @@ webdriver.Remote.uninstall_app = uninstall_app
 webdriver.Remote.kill_app = kill_app
 webdriver.Remote.set_location = set_location
 webdriver.Remote.get_appId = get_appId
+webdriver.Remote.scroll_to = scroll_to
+webdriver.Remote.scroll_to_visible = scroll_to_visible
