@@ -22,7 +22,7 @@ def add_quamotion_extensions(driver):
 	driver.command_executor._commands["scroll_to"] = ('POST', '/session/$sessionId/element/$elementId/quamotion/scrollTo')
 	driver.command_executor._commands["scroll_to_visible"] = ('POST', '/session/$sessionId/element/$elementId/quamotion/scrollToVisible')
 
-def device(deviceId, reuse_existing_session = True):
+def device(deviceId, reuse_existing_session = True, take_screenshots = False):
 	ensure_quamotion_running()
 
 	driver = webdriver.Remote(
@@ -32,7 +32,7 @@ def device(deviceId, reuse_existing_session = True):
 			'waitForReady': True,
 			'applicationType': 'Device',
 			'deviceId': deviceId,
-			'takesScreenshot': False,
+			'takesScreenshot': take_screenshots,
 			'reuseExistingSession': reuse_existing_session
 		})
 	

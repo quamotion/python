@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='quamotion',
-      version='0.64.2',
+      version='0.66.0',
       description='Python client for the Quamotion WebDriver',
       url='http://github.com/quamotion/python',
       author='Quamotion',
