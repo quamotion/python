@@ -10,6 +10,7 @@ setup(name='quamotion',
       packages=['quamotion'],
       install_requires=[
           'selenium',
-          'requests'
+          'requests',
+          'json'
       ],
       zip_safe=False)

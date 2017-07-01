@@ -1,4 +1,5 @@
 import requests
+import json
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
@@ -70,8 +71,8 @@ def get_installed_apps(self):
 def get_running_processes(self):
 	return self.execute('get_running_processes', { 'deviceId': self.deviceId } )
 
-def launch_app(self, app_id):
-	return self.execute('launch_app', { 'deviceId': self.deviceId, 'appId': app_id } )
+def launch_app(self, app_id, arguments = [ ]):
+	return self.command_executor._request('POST', self.command_executor._url + '/quamotion/device/' + self.deviceId + '/app/' + app_id + '/launch?strict', json.dumps(arguments))
 
 def uninstall_app(self, app_id):
 	return self.execute('uninstall_app', { 'deviceId': self.deviceId, 'appId': app_id } )
@@ -87,6 +88,7 @@ def get_appId(self):
 
 def scroll_to(self, container_id, xpath):
 	return self.execute('scroll_to', { 'elementId': container_id, 'value': xpath, 'using': By.XPATH  } )
+
 def scroll_to_visible(self, element_id):
 	return self.execute('scroll_to_visible', {'elementId': element_id} )
 
