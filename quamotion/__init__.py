@@ -11,6 +11,9 @@ def ensure_quamotion_running():
 	except Exception as e:
 		raise Exception('Failed to connect to the Quamotion WebDriver. Please make sure the WebDriver service is running!')
 
+def stop_agent(device_id):
+	return requests.post('http://localhost:17894/wd/hub/quamotion/device/' + device_id + '/stopAgent')
+
 def add_quamotion_extensions(driver):
 	driver.command_executor._commands["homescreen"] = ('POST', '/session/$sessionId/wda/homescreen')
 	driver.command_executor._commands["get_installed_apps"] = ('GET', '/quamotion/device/$deviceId/app?strict&all')
