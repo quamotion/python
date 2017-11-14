@@ -3,16 +3,16 @@ import json
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-def ensure_quamotion_running():
+def ensure_quamotion_running(host = 'http://localhost:17894/wd/hub'):
 	# Get the status page, to make sure the Quamotion WebDriver is up and running. This can come in handy
 	# if you have just (re)started the Quamotion service.
 	try:
-		r = requests.get('http://localhost:17894/wd/hub/status', timeout=5)
+		r = requests.get(host + '/status', timeout=5)
 	except Exception as e:
 		raise Exception('Failed to connect to the Quamotion WebDriver. Please make sure the WebDriver service is running!')
 
-def stop_agent(device_id):
-	return requests.post('http://localhost:17894/wd/hub/quamotion/device/' + device_id + '/stopAgent')
+def stop_agent(device_id, host = 'http://localhost:17894/wd/hub'):
+	return requests.post(host+'/quamotion/device/' + device_id + '/stopAgent')
 
 def add_quamotion_extensions(driver):
 	driver.command_executor._commands["homescreen"] = ('POST', '/session/$sessionId/wda/homescreen')
@@ -26,11 +26,11 @@ def add_quamotion_extensions(driver):
 	driver.command_executor._commands["scroll_to"] = ('POST', '/session/$sessionId/element/$elementId/quamotion/scrollTo')
 	driver.command_executor._commands["scroll_to_visible"] = ('POST', '/session/$sessionId/element/$elementId/quamotion/scrollToVisible')
 
-def device(deviceId, reuse_existing_session = True, take_screenshots = False):
-	ensure_quamotion_running()
+def device(deviceId, reuse_existing_session = True, take_screenshots = False, host = 'http://localhost:17894/wd/hub'):
+	ensure_quamotion_running(host)
 
 	driver = webdriver.Remote(
-		command_executor='http://localhost:17894/wd/hub',
+		command_executor=host,
 		desired_capabilities =
 		{
 			'waitForReady': True,
@@ -45,11 +45,11 @@ def device(deviceId, reuse_existing_session = True, take_screenshots = False):
 	add_quamotion_extensions(driver)
 	return driver
 
-def web(deviceId, reuse_existing_session = True):
-	ensure_quamotion_running()
+def web(deviceId, reuse_existing_session = True, host = 'http://localhost:17894/wd/hub'):
+	ensure_quamotion_running(host)
 
 	driver = webdriver.Remote(
-		command_executor='http://localhost:17894/wd/hub',
+		command_executor=host,
 		desired_capabilities =
 		{
 			'waitForReady': True,
